@@ -6,12 +6,14 @@ import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.afomic.medium.R;
 import com.afomic.medium.model.BigText;
@@ -47,7 +49,7 @@ public class CreatePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater mInflater=LayoutInflater.from(mContext);
+        LayoutInflater mInflater=(LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         switch (viewType){
             case Html.TAG_BIG_TEXT:
                 View v= mInflater.inflate(R.layout.item_add_big_text,parent,false);
@@ -68,20 +70,20 @@ public class CreatePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Html htmlElement=htmlList.get(position);
         switch (htmlElement.getType()){
             case Html.TAG_BIG_TEXT:
-                BigText mBigText=(BigText) htmlElement;
-                AddBigTextHolder mBigTextHolder=(AddBigTextHolder) holder;
-                mBigTextHolder.bindView(mBigText);
+                BigText bigText=(BigText) htmlElement;
+                AddBigTextHolder bigTextHolder=(AddBigTextHolder) holder;
+                bigTextHolder.bigTextInput.setTag(position);
+                bigTextHolder.bigTextInput.setText(bigText.getBodyText());
+                getFocus(bigTextHolder.bigTextInput,position);
                 break;
             case Html.TAG_IMAGE:
-                Image mImage=(Image) htmlElement;
-                AddImageViewHolder mImageViewHolder=(AddImageViewHolder) holder;
-                mImageViewHolder.bindView(mImage);
-
                 break;
             case Html.TAG_NORMAL_TEXT:
-                NormalText mNormalText=(NormalText) htmlElement;
-                AddNormalTextHolder mAddNormalTextHolder=(AddNormalTextHolder) holder;
-                mAddNormalTextHolder.bindView(mNormalText);
+                NormalText normalText=(NormalText) htmlElement;
+                AddNormalTextHolder normalTextHolder=(AddNormalTextHolder)holder;
+                normalTextHolder.normalTextInput.setTag(position);
+                normalTextHolder.normalTextInput.setText(normalText.getTextBody());
+                getFocus(normalTextHolder.normalTextInput,position);
                 break;
         }
 
@@ -105,8 +107,8 @@ public class CreatePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public AddImageViewHolder(View itemView) {
             super(itemView);
-            mImageView=(ImageView) itemView.findViewById(R.id.imv_add_image);
-            removeButton=(ImageView) itemView.findViewById(R.id.imv_remove_btn);
+            mImageView= itemView.findViewById(R.id.imv_add_image);
+            removeButton= itemView.findViewById(R.id.imv_remove_btn);
             removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -125,67 +127,21 @@ public class CreatePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public AddNormalTextHolder(View itemView) {
             super(itemView);
-            normalTextInput=(EditText) itemView.findViewById(R.id.edt_add_normal_text);
-            normalTextInput.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    NormalText mNormalText=(NormalText) htmlList.get(getAdapterPosition());
-                    mNormalText.setTextBody(charSequence.toString());
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            });
+            normalTextInput=itemView.findViewById(R.id.edt_add_normal_text);
+            normalTextInput.addTextChangedListener(new MyTextWatch(normalTextInput));
 
         }
-        public void bindView(NormalText text){
-            if(getAdapterPosition()==(htmlList.size()-1)){
-                normalTextInput.requestFocus();
-                showKeyboard(normalTextInput);
 
-            }
-            normalTextInput.setText(text.getTextBody());
-
-        }
     }
     public class AddBigTextHolder extends RecyclerView.ViewHolder{
         EditText bigTextInput;
 
         public AddBigTextHolder(View itemView) {
             super(itemView);
-            bigTextInput=(EditText) itemView.findViewById(R.id.edt_add_big_text);
-            bigTextInput.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    BigText mBigText=(BigText) htmlList.get(getAdapterPosition());
-                    mBigText.setBodyText(charSequence.toString());
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                }
-            });
+            bigTextInput=itemView.findViewById(R.id.edt_add_big_text);
+            bigTextInput.addTextChangedListener(new MyTextWatch(bigTextInput) );
         }
-        public void bindView(BigText text){
-            if(getAdapterPosition()==(htmlList.size()-1)){
-                bigTextInput.requestFocus();
-                showKeyboard(bigTextInput);
-            }
-            bigTextInput.setText(text.getBodyText());
-        }
+
     }
     public void showKeyboard(final EditText editText){
         new Handler().postDelayed(new Runnable() {
@@ -197,5 +153,61 @@ public class CreatePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         },100);
 
     }
+    public class MyTextWatch implements TextWatcher{
+        EditText editText;
+        public MyTextWatch(EditText view){
+            this.editText=view;
 
+        }
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            int position=(int)editText.getTag();
+            Html html=htmlList.get(position);
+            switch (html.getType()){
+                case Html.TAG_BIG_TEXT:
+                    BigText bigText=(BigText) html;
+                    bigText.setBodyText(s.toString());
+                    break;
+                case Html.TAG_NORMAL_TEXT:
+                    NormalText normalText=(NormalText) html;
+                    normalText.setTextBody(s.toString());
+                    break;
+            }
+            logData();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    }
+    public void logData(){
+        for(int i=0;i<htmlList.size();i++){
+            Html html=htmlList.get(i);
+            switch (html.getType()){
+                case Html.TAG_BIG_TEXT:
+                    BigText bigText=(BigText) html;
+                    Log.e("medium", "logData: Big Text position: "+i+" content:"+bigText.getBodyText());
+                    break;
+                case Html.TAG_NORMAL_TEXT:
+                    NormalText normalText=(NormalText) html;
+                    Log.e("medium", "logData: normal position: "+i+" content:"+normalText.getTextBody() );
+                    break;
+            }
+
+        }
+    }
+    public void getFocus(EditText edt,int position){
+        if(position==(htmlList.size()-1)){
+            edt.requestFocus();
+            showKeyboard(edt);
+        }
+
+    }
 }

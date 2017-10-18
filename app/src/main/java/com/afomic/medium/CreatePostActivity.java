@@ -61,8 +61,6 @@ public class CreatePostActivity extends AppCompatActivity implements CreatePostA
                 NormalText mNormalText=new NormalText("");
                 htmlList.add(mNormalText);
                 mAdapter.notifyDataSetChanged();
-                Toast.makeText(CreatePostActivity.this,""+htmlList.size(),Toast.LENGTH_SHORT).show();
-
             }
         });
         addBigTextButton.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +69,6 @@ public class CreatePostActivity extends AppCompatActivity implements CreatePostA
                 BigText mBigText=new BigText("");
                 htmlList.add(mBigText);
                 mAdapter.notifyDataSetChanged();
-                Toast.makeText(CreatePostActivity.this,""+htmlList.size(),Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -83,7 +80,6 @@ public class CreatePostActivity extends AppCompatActivity implements CreatePostA
             Image newImage=new Image(data.getData().toString());
             htmlList.add(newImage);
             mAdapter.notifyDataSetChanged();
-            Toast.makeText(CreatePostActivity.this,""+htmlList.size(),Toast.LENGTH_SHORT).show();
 
         }
         super.onActivityResult(requestCode, resultCode, data);
