@@ -20,6 +20,7 @@ import com.afomic.medium.model.BigText;
 import com.afomic.medium.model.Html;
 import com.afomic.medium.model.Image;
 import com.afomic.medium.model.NormalText;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -77,6 +78,13 @@ public class CreatePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 getFocus(bigTextHolder.bigTextInput,position);
                 break;
             case Html.TAG_IMAGE:
+                Image htmlImage=(Image) htmlElement;
+                AddImageViewHolder imageHolder=(AddImageViewHolder) holder;
+                Uri imageUri=Uri.parse(htmlImage.getImageUrl());
+                Picasso.with(mContext)
+                        .load(imageUri)
+                        .placeholder(R.drawable.image_placeholder)
+                        .into(imageHolder.mImageView);
                 break;
             case Html.TAG_NORMAL_TEXT:
                 NormalText normalText=(NormalText) htmlElement;

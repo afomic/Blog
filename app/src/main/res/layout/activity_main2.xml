@@ -12,12 +12,13 @@
        android:id="@+id/rv_post_editor"
        android:layout_weight="1"
        android:layout_height="0dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#efebe9"
         android:gravity="center"
-        android:background="@android:color/darker_gray"
         android:orientation="horizontal"
         android:padding="8dp">
 
@@ -26,21 +27,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@drawable/ic_hd"/>
+            android:src="@drawable/ic_text_fields"/>
 
         <ImageView
             android:id="@+id/imv_add_normal_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:src="@drawable/ic_brightness"/>
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_text_fields"/>
 
         <ImageView
             android:id="@+id/imv_add_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@drawable/ic_hd"/>
+            android:src="@drawable/ic_image"/>
 
         <ImageView
             android:id="@+id/imv_add_bullet_point"

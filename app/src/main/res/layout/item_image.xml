@@ -2,12 +2,12 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="16dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <ImageView
         android:src="@drawable/image"
         android:id="@+id/imv_image"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <TextView

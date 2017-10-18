@@ -1,6 +1,9 @@
 package com.afomic.medium;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(mIntent);
             }
         });
+        requestPermission();
 
     }
     public ArrayList<Html> getDummyPost(){
@@ -52,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return content;
+    }
+    public void requestPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            int permissionCheck = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            if(permissionCheck!=PackageManager.PERMISSION_GRANTED){
+                requestPermissions( new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},110);
+            }
+        }
+
     }
 
 }
