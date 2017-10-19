@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.afomic.medium">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
@@ -17,7 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity  android:windowSoftInputMode="adjustResize" android:name=".CreatePostActivity">
+        <activity
+            android:name=".CreatePostActivity"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity android:name=".PostDetailActivity">
         </activity>
     </application>
 

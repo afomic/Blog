@@ -9,7 +9,7 @@
     tools:context="com.afomic.medium.MainActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_post_content"
+        android:id="@+id/rv_post_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <android.support.design.widget.FloatingActionButton

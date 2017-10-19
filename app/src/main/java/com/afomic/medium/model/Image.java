@@ -23,4 +23,8 @@ public class Image implements Html {
         return Html.TAG_IMAGE;
     }
 
+    @Override
+    public String toHtml() {
+        return "<imv>"+imageUrl+"</imv>";
+    }
 }

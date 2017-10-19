@@ -23,4 +23,9 @@ public class BigText implements Html {
     public int getType() {
         return Html.TAG_BIG_TEXT;
     }
+
+    @Override
+    public String toHtml() {
+        return "<bt>"+bodyText+"</bt>";
+    }
 }

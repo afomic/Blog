@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -14,6 +17,7 @@ import com.afomic.medium.model.BigText;
 import com.afomic.medium.model.Html;
 import com.afomic.medium.model.Image;
 import com.afomic.medium.model.NormalText;
+import com.afomic.medium.util.HtmlParser;
 
 import java.util.ArrayList;
 
@@ -51,6 +55,7 @@ public class CreatePostActivity extends AppCompatActivity implements CreatePostA
             @Override
             public void onClick(View view) {
                 Intent mIntent=new Intent(Intent.ACTION_GET_CONTENT);
+                mIntent.setType("image/*");
                 startActivityForResult(mIntent,GET_IMAGE_REQUEST_CODE);
 
             }
@@ -89,5 +94,19 @@ public class CreatePostActivity extends AppCompatActivity implements CreatePostA
     public void onImageRemovePressed(int position) {
         htmlList.remove(position);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_compose_post,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.menu_submit_post){
+            Log.e("medium", ""+ HtmlParser.toHtml(htmlList));
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

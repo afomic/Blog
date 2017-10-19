@@ -12,26 +12,49 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.afomic.medium.adapter.PostListAdapter;
 import com.afomic.medium.model.BigText;
 import com.afomic.medium.model.Html;
 import com.afomic.medium.adapter.HtmlAdapter;
 import com.afomic.medium.model.Image;
 import com.afomic.medium.model.NormalText;
+import com.afomic.medium.model.Post;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    RecyclerView postContent;
+    RecyclerView postList;
     FloatingActionButton mFab;
+    ArrayList<Post> mPosts;
+    PostListAdapter adapter;
+
+    DatabaseReference blogRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        requestPermission();
+
         mFab=(FloatingActionButton) findViewById(R.id.fab);
-        postContent=(RecyclerView) findViewById(R.id.rv_post_content);
-        postContent.setLayoutManager(new LinearLayoutManager(this));
-        HtmlAdapter mAdapter=new HtmlAdapter(this,getDummyPost());
-        postContent.setAdapter(mAdapter);
+
+        postList=(RecyclerView) findViewById(R.id.rv_post_list);
+
+        blogRef= FirebaseDatabase.getInstance().getReference("blog");
+
+        mPosts=new ArrayList<>();
+
+        adapter=new PostListAdapter(this,mPosts);
+
+        postList.setLayoutManager(new LinearLayoutManager(this));
+
+        postList.setAdapter(adapter);
+
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,23 +63,39 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(mIntent);
             }
         });
-        requestPermission();
 
-    }
-    public ArrayList<Html> getDummyPost(){
-        ArrayList<Html> content=new ArrayList<>();
-        for(int i=10;i>=0;i--){
-            if(i%2==0){
-                content.add(new Image(""));
-            }else if(i%3==0){
-                content.add(new BigText(""));
-            }else {
-                content.add(new NormalText(""));
+        blogRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Post post=dataSnapshot.getValue(Post.class);
+                mPosts.add(0,post);
+                adapter.notifyItemInserted(0);
+
             }
 
-        }
-        return content;
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
+
     public void requestPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             int permissionCheck = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);

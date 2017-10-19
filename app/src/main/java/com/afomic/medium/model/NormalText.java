@@ -25,4 +25,9 @@ public class NormalText implements Html {
     public int getType() {
         return Html.TAG_NORMAL_TEXT;
     }
+
+    @Override
+    public String toHtml() {
+        return "<nt>"+textBody+"</nt>";
+    }
 }

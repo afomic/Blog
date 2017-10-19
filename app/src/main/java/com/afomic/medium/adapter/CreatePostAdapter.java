@@ -187,7 +187,6 @@ public class CreatePostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     normalText.setTextBody(s.toString());
                     break;
             }
-            logData();
         }
 
         @Override

@@ -12,4 +12,6 @@ public interface Html {
      * this return the type of Html tag we
      */
     int getType();
+
+    String toHtml();
 }
